@@ -5,21 +5,20 @@ This module is reference javiersantos's AppUpdater
 <a href="https://github.com/javiersantos/AppUpdaterr">javiersantos's AppUpdater</a>
 
 ## How to use
-1. Import the library module to your project:
+1. Add the JitPack repository to your build file:
 ```
-a. Click File > New > Import Module.
-b. Enter the location of the library module directory then click Finish.
+    allprojects {
+        repositories {
+            ...
+            maven { url 'https://jitpack.io' }
+        }
+    }
 ```
-
-2. And add the library to your module **settings.gradle**:
+2. Add the dependency:
 ```
-include ':app', ':appupdater'
-```
-3. And add the library to your module build.gradle:
-```
-dependencies {
-    implementation project(':appupdater')
-}
+    dependencies {
+        implementation 'com.github.RX1226:AppUpdater:-SNAPSHOT'
+    }
 ```
 ## Usage
 Use AppUdpater.getLatestAppVersion method to get app page information,
