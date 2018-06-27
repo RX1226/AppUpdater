@@ -1,8 +1,8 @@
 <h1 align="center">AppUpdater </h1>
 <h4 align="center">Android Library</h4>
 
-This module is reference javiersantos's AppUpdater
-<a href="https://github.com/javiersantos/AppUpdaterr">javiersantos's AppUpdater</a>
+This module is reference
+<a href="https://github.com/javiersantos/AppUpdater">javiersantos's AppUpdater</a>
 
 ## How to use
 1. Add the JitPack repository to your build file:
