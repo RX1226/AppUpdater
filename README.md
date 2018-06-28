@@ -17,7 +17,7 @@ This module is reference
 2. Add the dependency:
 ```
     dependencies {
-        implementation 'com.github.RX1226:AppUpdater:-SNAPSHOT'
+        implementation 'com.github.RX1226:AppUpdater:1.0.0'
     }
 ```
 ## Usage
