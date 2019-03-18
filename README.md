@@ -20,7 +20,7 @@ This module is reference
 2. Add the dependency:
 ```
     dependencies {
-        implementation 'com.github.RX1226:AppUpdater:v1.0.1'
+        implementation 'com.github.RX1226:AppUpdater:1.0.1'
     }
 ```
 ## Usage
