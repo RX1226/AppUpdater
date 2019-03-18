@@ -1,17 +1,13 @@
 package com.github.rx1226.appupdater;
 
-import java.net.URL;
-
 public class Update {
     private String version;
     private String releaseNotes;
-    private URL apk;
+    private String storeUrl;
 
-    public Update() {}
-
-    public Update(String latestVersion, String releaseNotes, URL apk) {
+    public Update(String latestVersion, String releaseNotes, String storeUrl) {
         this.version = latestVersion;
-        this.apk = apk;
+        this.storeUrl = storeUrl;
         this.releaseNotes = releaseNotes;
     }
 
@@ -31,11 +27,11 @@ public class Update {
         this.releaseNotes = releaseNotes;
     }
 
-    public URL getUrlToDownload() {
-        return apk;
+    public String getStoreUrl() {
+        return storeUrl;
     }
 
-    public void setUrlToDownload(URL apk) {
-        this.apk = apk;
+    public void setStoreUrl(String storeUrl) {
+        this.storeUrl = storeUrl;
     }
 }

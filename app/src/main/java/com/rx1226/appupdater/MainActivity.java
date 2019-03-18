@@ -18,15 +18,15 @@ public class MainActivity extends AppCompatActivity {
         AppUpdater.getLatestAppVersion(this, new AppUpdater.OnFinishListener() {
             @Override
             public void onSuccess(Update update) {
-                // use update to get infor mation
+                // use update to get info
                 Log.d(TAG, "getLatestVersion " + update.getLatestVersion());
                 Log.d(TAG, "getReleaseNotes " + update.getReleaseNotes());
-                Log.d(TAG, "getUrlToDownload " + update.getUrlToDownload());
+                Log.d(TAG, "getUrlToDownload " + update.getStoreUrl());
             }
 
             @Override
             public void onFailed(String errorMessage) {
-                // when error  to do somethig
+                // when error to do something
                 Log.d(TAG, "ErrorMessage =  " + errorMessage);
             }
         });

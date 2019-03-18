@@ -6,15 +6,10 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.github.rx1226.appupdater.Local.Version;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,18 +20,15 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import static com.github.rx1226.appupdater.Local.ErrorMseeage.APP_PAGE_ERROR;
-import static com.github.rx1226.appupdater.Local.ErrorMseeage.CONNECT_ERROR;
-import static com.github.rx1226.appupdater.Local.ErrorMseeage.NETWORK_NOT_AVAILABLE;
-import static com.github.rx1226.appupdater.Local.ErrorMseeage.PARSE_ERROR;
-import static com.github.rx1226.appupdater.Local.Language.EN;
-import static com.github.rx1226.appupdater.Local.Language.TW;
-import static com.github.rx1226.appupdater.Local.Language.ZH;
+import static com.github.rx1226.appupdater.Local.ErrorMessage.APP_PAGE_ERROR;
+import static com.github.rx1226.appupdater.Local.ErrorMessage.CONNECT_ERROR;
+import static com.github.rx1226.appupdater.Local.ErrorMessage.NETWORK_NOT_AVAILABLE;
+import static com.github.rx1226.appupdater.Local.ErrorMessage.PARSE_ERROR;
 
 
 public class AppUpdater {
     private static final String TAG = "AppUpdater";
-    private static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=%s&hl=%s";
+    private static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=%s";
     private static final String PLAY_STORE_TAG_RELEASE = "data-node-index=\"0;0\" jsmodel=\"hc6Ubd\"><div class=\"W4P4ne \"><div class=\"wSaTQd\">";
     private static final String PLAY_STORE_TAG_CHANGES = "data-node-index=\"7;0\" jsmodel=\"hc6Ubd\"><div class=\"W4P4ne \"><div class=\"wSaTQd\">";
 
@@ -49,10 +41,10 @@ public class AppUpdater {
         if (!isNetworkAvailable(context)) {
             listener.onFailed(NETWORK_NOT_AVAILABLE);
         }else {
-            final URL updateUrl = getUpdateURL(context);
             OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().url(updateUrl).build();
-            Log.d(TAG, "updateUrl = " + updateUrl);
+            final String storeUrl = getStoreUrl(context);
+            Request request = new Request.Builder().url(storeUrl).build();
+            Log.d(TAG, "storeUrl = " + storeUrl);
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
                 @Override
@@ -77,7 +69,7 @@ public class AppUpdater {
                             }
                             reader.close();
                             body.close();
-                            listener.onSuccess(new Update(getVersion(versionString), getRecentChanges(changesString), updateUrl));
+                            listener.onSuccess(new Update(getVersion(versionString), getRecentChanges(changesString), storeUrl));
                         }
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -91,25 +83,18 @@ public class AppUpdater {
         }
     }
 
-    private static URL getUpdateURL(Context context) {
-        String res = String.format(PLAY_STORE_URL, context.getPackageName(), Locale.getDefault().getLanguage());
-        try {
-            return new URL(res);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-
+    private static String getStoreUrl(Context context) {
+        return String.format(PLAY_STORE_URL, context.getPackageName());
     }
-    private static String getVersionString() {
-        switch (Locale.getDefault().getLanguage()){
-            case TW: return Version.TW;
-            case ZH: return Version.ZH;
-            default:
-            case EN: return Version.EN;
+    private static String getVersionPattern() {
+        StringBuilder versionPattern = new StringBuilder();
+        for(String version: Local.versions){
+            versionPattern.append("[").append(version).append("]*");
         }
+        return versionPattern.toString();
     }
     private static String getVersion(String source) {
-        String pattern = "<div class=\"BgcNfc\">"+getVersionString()+"</div><span class=\"htlgb\"><div><span class=\"htlgb\">([^<]+)</span></div></span></div>";
+        String pattern = "<div class=\"BgcNfc\">"+getVersionPattern()+"</div><span class=\"htlgb\"><div class=\"IQ1z0d\"><span class=\"htlgb\">([^<]+)</span></div></span></div>";
         Matcher matcher = Pattern.compile(pattern).matcher(source);
         if (matcher.find()) return matcher.group(1);
         else return "";
